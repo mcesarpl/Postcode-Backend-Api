@@ -1,1 +1,3 @@
-console.log('init project');
+import { Initializer } from '@src/services';
+
+Initializer.start();
