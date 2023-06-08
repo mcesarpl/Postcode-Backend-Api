@@ -1,5 +1,8 @@
 {
     "App": {
-        "port": "80"
+        "port": "80",
+        "databases": {
+            "elastic": "http://localhost:9200"
+        }
     }
 }
