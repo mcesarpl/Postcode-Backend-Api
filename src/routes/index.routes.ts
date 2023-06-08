@@ -1,12 +1,11 @@
 import express from 'express';
+import HealthCheckerRoute from './health.routes';
 
 class createRoutes {
   public static getRouter() {
     const router = express.Router();
 
-    router.use('/health', (_, response) => {
-      return response.status(200).send();
-    });
+    router.use('/health', HealthCheckerRoute.create());
 
     return router;
   }
