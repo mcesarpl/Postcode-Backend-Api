@@ -1,0 +1,9 @@
+{
+    "App": {
+        "port": "80",
+        "databases": {
+            "elastic": "http://localhost:9200"
+        },
+        "postcodeServiceUrl":"http://api.postcodes.io/postcodes"
+    }
+}
