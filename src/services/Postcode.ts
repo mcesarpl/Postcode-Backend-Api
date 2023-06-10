@@ -1,9 +1,6 @@
 import { PostcodeResponse } from '@src/class/PostcodeResponse';
 import { HttpClientFactory } from '@src/factories/HttpClientFactory';
-import {
-  IPostCodeServiceRawResponse,
-  IPostcodeResponse,
-} from '@src/interfaces/IPostcodeResponse';
+import { IPostCodeServiceRawResponse } from '@src/interfaces/IPostcodeResponse';
 import config from 'config';
 
 export class Postcode {
