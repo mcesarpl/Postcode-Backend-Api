@@ -4,6 +4,12 @@
         "databases": {
             "elastic": "http://localhost:9200"
         },
-        "postcodeServiceUrl":"http://api.postcodes.io/postcodes"
+        "postcodeServiceUrl":"http://api.postcodes.io/postcodes",
+        "airportGeoLocation": {
+            "Heathrow": {
+                "lat": 51.4700223,
+                "longitude": -0.4542955
+            }
+        }
     }
 }
