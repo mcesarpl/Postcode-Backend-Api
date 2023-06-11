@@ -2,7 +2,11 @@
     "App": {
         "port": "80",
         "databases": {
-            "elastic": "http://localhost:9200"
+            "elastic": "http://localhost:9200",
+            "redis":{
+                "url":"redis://localhost:6379",
+                "expiration": 3600
+            }
         },
         "postcodeServiceUrl":"http://api.postcodes.io/postcodes",
         "airportGeoLocation": {

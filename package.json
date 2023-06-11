@@ -47,6 +47,7 @@
     "geolib": "^3.3.4",
     "http-status-codes": "^2.2.0",
     "moment": "^2.29.4",
+    "redis": "^4.6.7",
     "winston": "^3.9.0",
     "winston-elasticsearch": "^0.17.2"
   }
