@@ -42,49 +42,72 @@ export class PostcodeController {
     return enhancedAddress;
   }
 
+  private async generateNewSession(
+    enhancedAddress: IPostcodeResponseEnhanced,
+    session?: string,
+  ) {
+    let newSession = session;
+
+    if (!newSession) {
+      newSession = tokenGenerator.generateToken();
+    }
+
+    await this.sessionDb.create({
+      _id: newSession,
+      addresses: [enhancedAddress],
+    });
+
+    return newSession;
+  }
+
+  private async retrieveSession(
+    session: string,
+    enhancedAddress: IPostcodeResponseEnhanced,
+  ) {
+    const retrievedSession = await this.sessionDb.findOne(session);
+
+    if (!retrievedSession) {
+      await this.generateNewSession(enhancedAddress, session);
+      return [enhancedAddress];
+    }
+
+    const lastSearchs = retrievedSession.addresses;
+
+    const newSessionAddress = [enhancedAddress, ...lastSearchs.slice(0, 2)];
+
+    await this.sessionDb.updateOne({
+      _id: session,
+      addresses: newSessionAddress,
+    });
+
+    return newSessionAddress;
+  }
+
   public async getAddress(request: Request, response: Response) {
     try {
       const { code } = request.params;
 
       if (!code) {
-        return response.status(StatusCodes.BAD_GATEWAY).send();
+        return response.status(StatusCodes.OK).json();
       }
 
-      const session = request.header('session');
+      let session = request.header('session');
 
       const enhancedAddress = await this.retrievePostcode(code);
 
+      let finalResponse = [enhancedAddress];
+
       if (!session) {
-        const newSession = tokenGenerator.generateToken();
-
-        await this.sessionDb.create({
-          _id: newSession,
-          addresses: [enhancedAddress],
-        });
-
-        response.set({
-          session: newSession,
-        });
-
-        return response.status(StatusCodes.OK).json(enhancedAddress);
+        session = await this.generateNewSession(enhancedAddress);
       }
 
-      const retrievedSession = await this.sessionDb.findOne(session);
+      finalResponse = await this.retrieveSession(session, enhancedAddress);
 
-      const lastSearchs = retrievedSession?.addresses;
-
-      let newSessionAddress = [enhancedAddress];
-
-      if (lastSearchs) {
-        newSessionAddress = [enhancedAddress, ...lastSearchs.slice(0, 2)];
-      }
-
-      await this.sessionDb.updateOne({
-        _id: session,
-        addresses: newSessionAddress,
+      response.set({
+        session,
       });
 
-      return response.status(StatusCodes.OK).json(newSessionAddress);
+      return response.status(StatusCodes.OK).json(finalResponse);
     } catch (error) {
       this.log.error((error as Error).stack);
       return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
