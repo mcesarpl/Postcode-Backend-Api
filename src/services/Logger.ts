@@ -9,7 +9,7 @@ import config, { IConfig } from 'config';
 
 export class Logger {
   create() {
-    const dbConfig: IConfig = config.get('App.database');
+    const dbConfig: IConfig = config.get('App.databases');
 
     const { combine, colorize, printf } = format;
 

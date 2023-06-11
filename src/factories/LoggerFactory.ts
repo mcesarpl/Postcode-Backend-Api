@@ -8,6 +8,9 @@ class LoggerFactory {
   }
 
   get(): winstonLogger {
+    if (!this.initialedLogger) {
+      this.start();
+    }
     return this.initialedLogger;
   }
 }
