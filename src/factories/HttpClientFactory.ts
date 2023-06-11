@@ -1,4 +1,4 @@
-import { AxiosAdapter } from '@src/adapters/AxiosAdapter';
+import { AxiosAdapter } from '@src/adapters/HttpClientAdapters/AxiosAdapter';
 
 export class HttpClientFactory {
   public static create() {
