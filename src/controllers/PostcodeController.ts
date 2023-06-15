@@ -1,4 +1,4 @@
-import { EnhancePostcodeResponse } from '@src/helpers';
+import { EnhancePostcodeResponse, Utils } from '@src/helpers';
 import { Postcode, tokenGenerator } from '@src/services';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -7,43 +7,50 @@ import { CacheDatabaseFactory } from '@src/factories';
 import { AddressRedisModel, sessionRedisModel } from '@src/models';
 import {
   IPostcodeResponseEnhanced,
-  sessionAddresses,
+  IPostcodeResponseError,
+  ISessionAddresses,
 } from '@src/interfaces/IPostcodeResponse';
 
 export class PostcodeController {
   constructor(
     private readonly log = LoggerFactory.get(),
-    private readonly sessionDb = CacheDatabaseFactory.create<sessionAddresses>(
+    private readonly sessionDb = CacheDatabaseFactory.create<ISessionAddresses>(
       sessionRedisModel,
     ),
-    private readonly postcodeDb = CacheDatabaseFactory.create<IPostcodeResponseEnhanced>(
-      AddressRedisModel,
-    ),
+    private readonly postcodeDb = CacheDatabaseFactory.create<
+      IPostcodeResponseEnhanced | IPostcodeResponseError
+    >(AddressRedisModel),
   ) {}
 
   private async retrievePostcode(
     code: string,
-  ): Promise<IPostcodeResponseEnhanced> {
+  ): Promise<IPostcodeResponseEnhanced | IPostcodeResponseError> {
     let enhancedAddress = await this.postcodeDb.findOne(code);
 
     if (!enhancedAddress) {
       const postcode = new Postcode();
 
-      const address = await postcode.getSingleCode(code);
+      const postcodeResponse = await postcode.getSingleCode(code);
 
-      enhancedAddress = EnhancePostcodeResponse.addAirportDistance(address);
+      if (Utils.isPostcodeResponseSuccess(postcodeResponse)) {
+        enhancedAddress =
+          EnhancePostcodeResponse.addAirportDistance(postcodeResponse);
+        await this.postcodeDb.create(enhancedAddress);
+      }
 
-      await this.postcodeDb.create({ _id: code, ...enhancedAddress });
+      const error: IPostcodeResponseError =
+        postcodeResponse as IPostcodeResponseError;
+
+      await this.postcodeDb.create({ ...error });
+
+      return error;
     }
-    // eslint-disable-next-line
-    // @ts-ignore
-    delete enhancedAddress._id;
 
     return enhancedAddress;
   }
 
   private async generateNewSession(
-    enhancedAddress: IPostcodeResponseEnhanced,
+    enhancedAddress: IPostcodeResponseEnhanced | IPostcodeResponseError,
     session?: string,
   ) {
     let newSession = session;
@@ -62,7 +69,7 @@ export class PostcodeController {
 
   private async retrieveSession(
     session: string,
-    enhancedAddress: IPostcodeResponseEnhanced,
+    enhancedAddress: IPostcodeResponseEnhanced | IPostcodeResponseError,
   ) {
     const retrievedSession = await this.sessionDb.findOne(session);
 
