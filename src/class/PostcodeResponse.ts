@@ -1,13 +1,16 @@
 import {
   IPostCodeServiceRawResponse,
-  IPostcodeResponse,
+  IPostcodeResponseSuccess,
+  IPostcodeResponseError,
 } from '@src/interfaces/IPostcodeResponse';
 
 export class PostcodeResponse {
   public static reshape(
+    postcode: string,
     rawObject: IPostCodeServiceRawResponse,
-  ): IPostcodeResponse {
+  ): IPostcodeResponseSuccess {
     return {
+      _id: postcode,
       admin_county: rawObject.result['admin_county'],
       admin_district: rawObject.result['admin_district'],
       admin_ward: rawObject.result['admin_ward'],
@@ -31,6 +34,16 @@ export class PostcodeResponse {
       primary_care_trust: rawObject.result['primary_care_trust'],
       quality: rawObject.result['quality'],
       region: rawObject.result['region'],
+    };
+  }
+
+  public static generateErrorResponse(
+    postcode: string,
+    message = 'not found',
+  ): IPostcodeResponseError {
+    return {
+      _id: postcode,
+      message,
     };
   }
 }

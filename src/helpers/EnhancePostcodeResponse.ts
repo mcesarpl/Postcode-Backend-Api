@@ -1,4 +1,4 @@
-import { IPostcodeResponse } from '@src/interfaces/IPostcodeResponse';
+import { IPostcodeResponseSuccess } from '@src/interfaces/IPostcodeResponse';
 import { GeoLocationsHelper } from './GeoLocationsHelper';
 import config, { IConfig } from 'config';
 import { IGeolocation } from '@src/interfaces';
@@ -6,7 +6,7 @@ import { UnitConverter } from '.';
 
 export class EnhancePostcodeResponse {
   public static addAirportDistance(
-    postcodeReshapedResponse: IPostcodeResponse,
+    postcodeReshapedResponse: IPostcodeResponseSuccess,
   ) {
     const airports: IConfig = config.get('App.airportGeoLocation');
 
