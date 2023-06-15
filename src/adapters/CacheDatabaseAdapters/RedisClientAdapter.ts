@@ -59,7 +59,9 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
 
     if (result !== 'OK') {
       throw new Error(
-        `Error when creating instance: ${JSON.stringify(inputInstance)}`,
+        `RedisClientAdapter: Error when creating instance: ${JSON.stringify(
+          inputInstance,
+        )}, redisResult: ${result}`,
       );
     }
 
@@ -85,8 +87,7 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
     }
 
     const result = await this.client.set(generatedKey, stringified, {
-      EX: Number(this.expirationTime) | 3600,
-      NX: true,
+      EX: Number(this.expirationTime) ?? 3600,
     });
 
     if (result !== 'OK') {
