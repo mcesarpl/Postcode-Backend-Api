@@ -6,14 +6,18 @@ describe('Postcode Routes functional tests', () => {
     const response = await global.testRequest.get('/postcode/N76RS');
     expect(response.status).toBe(200);
     expect(response.headers.session).not.toBeNull();
-    expect(response.body).toEqual([postcodeResponseEnhancedWithAirportDistance]);
+    expect(response.body).toEqual([
+      postcodeResponseEnhancedWithAirportDistance,
+    ]);
   });
 
   it('should not return an address when passing a valid one with slight difference', async () => {
     const response = await global.testRequest.get('/postcode/N76R');
     expect(response.status).toBe(200);
     expect(response.headers.session).not.toBeNull();
-    expect(response.body).toEqual([{...postcodeResponseNotFound, _id: "N76R"}]);
+    expect(response.body).toEqual([
+      { ...postcodeResponseNotFound, _id: 'N76R' },
+    ]);
   });
 
   it('should return an address not found when passed an invalid postcode', async () => {
@@ -27,19 +31,35 @@ describe('Postcode Routes functional tests', () => {
     const response = await global.testRequest.get('/postcode/N76RS');
     expect(response.status).toBe(200);
     expect(response.headers.session).not.toBeNull();
-    expect(response.body).toEqual([postcodeResponseEnhancedWithAirportDistance]);
+    expect(response.body).toEqual([
+      postcodeResponseEnhancedWithAirportDistance,
+    ]);
 
     const session = response.headers.session;
 
-    const secondResponse = await global.testRequest.get('/postcode/N76RS').set('session', session);
+    const secondResponse = await global.testRequest
+      .get('/postcode/N76RS')
+      .set('session', session);
     expect(secondResponse.status).toBe(200);
     expect(secondResponse.headers.session).not.toBeNull();
-    expect(secondResponse.body).toEqual(expect.arrayContaining([postcodeResponseEnhancedWithAirportDistance, postcodeResponseEnhancedWithAirportDistance]));
+    expect(secondResponse.body).toEqual(
+      expect.arrayContaining([
+        postcodeResponseEnhancedWithAirportDistance,
+        postcodeResponseEnhancedWithAirportDistance,
+      ]),
+    );
 
-    const thirdResponse = await global.testRequest.get('/postcode/NOTFOUND').set('session', session);
+    const thirdResponse = await global.testRequest
+      .get('/postcode/NOTFOUND')
+      .set('session', session);
     expect(thirdResponse.status).toBe(200);
     expect(thirdResponse.headers.session).not.toBeNull();
-    expect(thirdResponse.body).toEqual(expect.arrayContaining([postcodeResponseEnhancedWithAirportDistance, postcodeResponseEnhancedWithAirportDistance, postcodeResponseNotFound]));
-
+    expect(thirdResponse.body).toEqual(
+      expect.arrayContaining([
+        postcodeResponseEnhancedWithAirportDistance,
+        postcodeResponseEnhancedWithAirportDistance,
+        postcodeResponseNotFound,
+      ]),
+    );
   });
 });

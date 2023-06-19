@@ -13,6 +13,12 @@ class LoggerFactory {
     }
     return this.initialedLogger;
   }
+
+  close(): void {
+    if (this.initialedLogger) {
+      this.initialedLogger.end();
+    }
+  }
 }
 
 export default new LoggerFactory();

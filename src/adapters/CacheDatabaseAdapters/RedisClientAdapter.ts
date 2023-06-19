@@ -108,6 +108,10 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
       return null;
     }
 
+    if (!this.validateKey(keys[0], instanceId)) {
+      return null;
+    }
+
     const instance = await this.client.get(keys[0]);
 
     const parsedInstance = this.parseInstance(instance);
@@ -117,6 +121,12 @@ export class RedisClient<T> implements IDatabase<T, T | null> {
     }
 
     return parsedInstance;
+  }
+
+  private validateKey(keyFound: string, instanceId: string) {
+    const regex = new RegExp(`\\b${instanceId}\\b`);
+
+    return keyFound.match(regex);
   }
 
   async find(query: object) {

@@ -27,23 +27,40 @@ export class PostcodeController {
   ): Promise<IPostcodeResponseEnhanced | IPostcodeResponseError> {
     let enhancedAddress = await this.postcodeDb.findOne(code);
 
-    if (!enhancedAddress) {
-      const postcode = new Postcode();
+    if (enhancedAddress) {
+      return enhancedAddress;
+    }
 
-      const postcodeResponse = await postcode.getSingleCode(code);
+    const postcode = new Postcode();
 
-      if (Utils.isPostcodeResponseSuccess(postcodeResponse)) {
-        enhancedAddress =
-          EnhancePostcodeResponse.addAirportDistance(postcodeResponse);
-        await this.postcodeDb.create(enhancedAddress);
-      }
+    const postcodeResponse = await postcode.getSingleCode(code);
 
+    if (!Utils.isPostcodeResponseSuccess(postcodeResponse)) {
       const error: IPostcodeResponseError =
         postcodeResponse as IPostcodeResponseError;
 
-      await this.postcodeDb.create({ ...error });
+      try {
+        await this.postcodeDb.create(error);
+      } catch (postcodeDbError) {
+        this.log.warn(
+          `on postcodeDb.create: data: ${error}\nerror:${postcodeDbError}`,
+        );
+      }
 
       return error;
+    }
+
+    enhancedAddress =
+      EnhancePostcodeResponse.addAirportDistance(postcodeResponse);
+
+    try {
+      await this.postcodeDb.create(enhancedAddress);
+    } catch (postcodeDbError) {
+      this.log.warn(
+        `on postcodeDb.create: data: ${JSON.stringify(
+          enhancedAddress,
+        )}\nerror:${postcodeDbError}`,
+      );
     }
 
     return enhancedAddress;
@@ -59,10 +76,16 @@ export class PostcodeController {
       newSession = tokenGenerator.generateToken();
     }
 
-    await this.sessionDb.create({
-      _id: newSession,
-      addresses: [enhancedAddress],
-    });
+    try {
+      await this.sessionDb.create({
+        _id: newSession,
+        addresses: [enhancedAddress],
+      });
+    } catch (error) {
+      this.log.warn(
+        `on sessionDb.create: session: ${newSession}\nerror:${error}`,
+      );
+    }
 
     return newSession;
   }
@@ -82,10 +105,16 @@ export class PostcodeController {
 
     const newSessionAddress = [enhancedAddress, ...lastSearchs.slice(0, 2)];
 
-    await this.sessionDb.updateOne({
-      _id: session,
-      addresses: newSessionAddress,
-    });
+    try {
+      await this.sessionDb.updateOne({
+        _id: session,
+        addresses: newSessionAddress,
+      });
+    } catch (error) {
+      this.log.warn(
+        `on sessionDb.updateOne: session: ${session}\nerror:${error}`,
+      );
+    }
 
     return newSessionAddress;
   }
@@ -94,21 +123,21 @@ export class PostcodeController {
     try {
       const { code } = request.params;
 
-      if (!code) {
+      if (!code || code.length === 0) {
         return response.status(StatusCodes.OK).json();
       }
-
-      let session = request.header('session');
 
       const enhancedAddress = await this.retrievePostcode(code);
 
       let finalResponse = [enhancedAddress];
 
-      if (!session) {
+      let session = request.header('session');
+
+      if (session && session.length !== 0) {
+        finalResponse = await this.retrieveSession(session, enhancedAddress);
+      } else {
         session = await this.generateNewSession(enhancedAddress);
       }
-
-      finalResponse = await this.retrieveSession(session, enhancedAddress);
 
       response.set({
         session,

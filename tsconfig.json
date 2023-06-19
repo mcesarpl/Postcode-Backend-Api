@@ -32,7 +32,7 @@
   "include": [
     "./src/**/*.ts",
     "./test/**/*.ts",
-    "./globals.d.ts"
+    "./test/globals.d.ts"
   ],
   "exclude": [
     "./node_modules/*",
