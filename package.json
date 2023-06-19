@@ -9,6 +9,7 @@
     "test:functional": "NODE_ENV=test jest --detectOpenHandles --passWithNoTests --projects ./test --runInBand",
     "start": "npm run build && node dist/index.js",
     "dev": "NODE_ENV=dev ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "devDocker": "NODE_ENV=devDocker ts-node-dev -r tsconfig-paths/register src/index.ts",
     "style": "prettier --check --no-error-on-unmatched-pattern src/**/*.ts test/**/*.ts",
     "style:fix": "prettier --write src/**/*.ts test/**/*.ts",
     "eslint": "eslint ./src --ext .ts",

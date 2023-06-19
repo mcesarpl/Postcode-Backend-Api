@@ -70,6 +70,7 @@ The project uses the following technologies:</br>
 [Cors](https://www.npmjs.com/package/cors)</br>
 [Winston](https://www.npmjs.com/package/winston)</br>
 [Jest](https://jestjs.io/pt-BR/)</br>
+[SuperTest](https://www.npmjs.com/package/supertest)</br>
 [Ts-Jest](https://github.com/kulshekhar/ts-jest)</br>
 [Redis](https://redis.io/docs/stack/get-started/tutorials/stack-node/)</br>
 [Eslint](https://eslint.org/)</br>
@@ -101,6 +102,8 @@ in this case use the command below and restart the container:
   $  sysctl -w vm.max_map_count=262144
   $  exit
 ```
+- The Project should be running on Docker now, but if you need to run it outside docker, follow the next instructions
+
 - To install all project dependencies
 
 ```
