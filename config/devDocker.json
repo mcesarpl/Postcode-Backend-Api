@@ -1,0 +1,19 @@
+{
+  "App": {
+      "port": "80",
+      "databases": {
+          "elastic": "http://elasticsearch:9200",
+          "redis":{
+              "url":"redis://redis:6379",
+              "expiration": 180
+          }
+      },
+      "postcodeServiceUrl":"http://api.postcodes.io/postcodes",
+      "airportGeoLocation": {
+          "Heathrow": {
+              "lat": 51.4700223,
+              "longitude": -0.4542955
+          }
+      }
+  }
+}

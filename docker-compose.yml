@@ -3,7 +3,23 @@ version: '3'
 name: uk-zipcode-address
 
 services:
-  es01:
+  ts-node-docker:
+    container_name: ts-node-docker
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+      target: base
+    volumes:
+      - ./src:/home/node/app/src
+    expose:
+      - '80'
+    ports:
+      - '80:80'
+    networks:
+      - mynetwork
+    command: npm run devDocker
+
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: elastic-2
     environment:
@@ -20,8 +36,10 @@ services:
       - ./es1:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+    networks:
+      - mynetwork 
 
-  kib01:
+  kibana:
     image: docker.elastic.co/kibana/kibana:7.15.2
     container_name: kibana-2
     ports:
@@ -37,3 +55,8 @@ services:
       - /data/db/redis
     ports:
       - "6379:6379"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
