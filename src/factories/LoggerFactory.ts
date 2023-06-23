@@ -1,10 +1,10 @@
-import { Logger } from '@src/services';
+import { Logger } from '@src/services/Logger';
 import { Logger as winstonLogger } from 'winston';
 
 class LoggerFactory {
   public initialedLogger!: winstonLogger;
   start(): void {
-    this.initialedLogger = new Logger().create();
+    this.initialedLogger = Logger.create();
   }
 
   get(): winstonLogger {

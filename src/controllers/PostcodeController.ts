@@ -9,11 +9,13 @@ import {
   IPostcodeResponseEnhanced,
   IPostcodeResponseError,
   ISessionAddresses,
-} from '@src/interfaces/IPostcodeResponse';
+  Logger,
+} from '@src/interfaces';
 
 export class PostcodeController {
   constructor(
-    private readonly log = LoggerFactory.get(),
+    private readonly log: Logger = LoggerFactory.get(),
+    private readonly httpPostcode: Postcode = new Postcode(),
     private readonly sessionDb = CacheDatabaseFactory.create<ISessionAddresses>(
       sessionRedisModel,
     ),
@@ -31,9 +33,7 @@ export class PostcodeController {
       return enhancedAddress;
     }
 
-    const postcode = new Postcode();
-
-    const postcodeResponse = await postcode.getSingleCode(code);
+    const postcodeResponse = await this.httpPostcode.getSingleCode(code);
 
     if (!Utils.isPostcodeResponseSuccess(postcodeResponse)) {
       const error: IPostcodeResponseError =

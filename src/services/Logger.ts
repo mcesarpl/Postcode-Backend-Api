@@ -8,7 +8,7 @@ import moment from 'moment';
 import config, { IConfig } from 'config';
 
 export class Logger {
-  create() {
+  public static create() {
     const dbConfig: IConfig = config.get('App.databases');
 
     const { combine, colorize, printf } = format;

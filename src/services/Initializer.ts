@@ -1,5 +1,5 @@
 import config, { IConfig } from 'config';
-import { ServerFactory } from '@src/factories';
+import { Server } from '@src/factories';
 import Connections from './Connections';
 
 export class Initializer {
@@ -9,7 +9,7 @@ export class Initializer {
 
       await Connections.startDatabaseConnections();
 
-      const server = ServerFactory.create();
+      const server = Server.create();
       server.start();
 
       console.log(`Server is listening at port ${configPort}...`);

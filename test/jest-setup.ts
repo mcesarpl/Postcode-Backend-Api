@@ -1,11 +1,11 @@
 import supertest from "supertest";
-import { ServerFactory } from "@src/factories";
+import { Server } from "@src/factories";
 import Connections from "@src/services/Connections";
 import LoggerFactory from "@src/factories/LoggerFactory";
 
 beforeAll(async () => {
   await Connections.startDatabaseConnections();
-  const server = ServerFactory.create();
+  const server = Server.create();
   server.start();
   Object.defineProperty(global, 'testRequest', {
     value: supertest(server.get()),
