@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
@@ -6,7 +6,8 @@ import createRouter from '@src/routes/index.routes';
 import config from 'config';
 
 export class ExpressServer {
-  private app = express();
+  private app: Application = express();
+  private server: unknown;
   private port = config.get('App.port');
 
   middleware() {
@@ -37,7 +38,7 @@ export class ExpressServer {
   start() {
     this.middleware();
     this.routes();
-    this.app.listen(this.port);
+    this.server = this.app.listen(this.port);
   }
 
   get() {

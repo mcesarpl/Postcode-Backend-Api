@@ -1,4 +1,4 @@
-# We are excited you are taking the time to solve our technical assignment! #
+# This is a backend solution to the technical assignment propose ahead.
 
 ### Let’s pretend you are starting your first day with us. After you settle in, your first task will be assigned. Both Joseph (Product Owner) and Ness (Technical Lead) are ready to give you more details on your first task. ###
 
@@ -24,28 +24,11 @@
 	     
 		 
 
-I think a NodeJS application would be an excellent idea. There are definitely benefits to it but feel free to use other technologies/frameworks. Obviously if you want to use other frontend tools/technologies to help you achieve the work, I’m happy with it, but remember the focus must be as much in having it working as it should to have a good user experience, bonus points if you are able to produce a mockup and explain the reason why you used certain components. It is important the user understands all the functionalities we have to offer and is able to understand them correctly
+I think a NodeJS application would be an excellent idea. There are definitely benefits to it but feel free to use other technologies/frameworks. Obviously if you want to use other frontend tools/technologies to help you achieve the work, I’m happy with it, but remember the focus must be as much in having it working as it should to have a good user experience, bonus points if you are able to produce a mockup and explain the reason why you used certain components. It is important the user understands all the functionalities we have to offer and is able to understand them correctly.
 
 Once you are done please commit the code and create a Pull Request so we can code review it.”
 
-Now that the exercise has been explained, you can start working on it, we normally request for it to be uploaded into our git repository within 3 working days, but can be changed if you need more time to start. This task should take you no longer than 3 hours and needless to say should be totally completed by you, after all this is supposed to be a fun challenge! 
-
----
-
-## We will provide you a git repository in bitbucket for the code to be uploaded. Please see the instructions below:
-
-Please sign up for an account on Bitbucket if you don't have one already. If you do, feel free to use your own login / profile.
-
-If you're not familiar with GIT, use the Sourcetree client to get started or visit http://git-scm.com for the official git client.
-
-Once you're done with your work, COMMIT and then PUSH (ie. send to bitbucket). The PUSH with notify us and we will review your work. Only push when you're done, and push once. This is to avoid us reviewing an incomplete submission.
-
----
-
-### We're here to help...
-Should you run into problems or have any questions - please get in touch with either your recruitment agent or with Renato Oliveira - renato.oliveira@craftablesoftware.com
-
-Good luck
+Now that the exercise has been explained, you can start working on it, we normally request for it to be uploaded into our git repository within 3 working days, but can be changed if you need more time to start. This task should take you no longer than 3 hours and needless to say should be totally completed by you, after all this is supposed to be a fun challenge!
 
 # Backend Solution Proposal
 
@@ -102,7 +85,7 @@ in this case use the command below and restart the container:
   $  sysctl -w vm.max_map_count=262144
   $  exit
 ```
-- The Project should be running on Docker now, but if you need to run it outside docker, follow the next instructions
+- The Nodejs Project should be running on Docker now, but if you need to run it outside docker, follow the next instructions
 
 - To install all project dependencies
 
@@ -110,13 +93,16 @@ in this case use the command below and restart the container:
   $ npm install
 ```
 
+- Stop the Main Api Container, if it's running
+
 - To run the project in dev environment
+
 
 ```
   $ npm run dev
 ```
 
-The main API port will be available on the port **80**
+The main API port should be available on the port **80**
 
 # Use Cases
 

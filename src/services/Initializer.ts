@@ -9,8 +9,7 @@ export class Initializer {
 
       await Connections.startDatabaseConnections();
 
-      const server = Server.create();
-      server.start();
+      Server.create();
 
       console.log(`Server is listening at port ${configPort}...`);
     } catch (error) {
