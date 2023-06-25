@@ -1,4 +1,4 @@
-import { RedisClient } from '../RedisClientAdapter';
+import { RedisClient } from '@src/adapters/CacheDatabaseAdapters/RedisClientAdapter';
 
 import { createClient, RedisClientType } from 'redis';
 import { tokenGenerator } from '@src/services';

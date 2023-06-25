@@ -6,6 +6,7 @@ class ServerFactory {
   public create() {
     if (!this.server) {
       this.server = new ExpressServer();
+      this.server.start();
     }
 
     return this.server;
