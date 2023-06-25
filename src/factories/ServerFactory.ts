@@ -1,7 +1,15 @@
 import { ExpressServer } from '@src/services';
 
-export class ServerFactory {
-  public static create() {
-    return new ExpressServer();
+class ServerFactory {
+  public server!: ExpressServer;
+
+  public create() {
+    if (!this.server) {
+      this.server = new ExpressServer();
+    }
+
+    return this.server;
   }
 }
+
+export const Server = new ServerFactory();

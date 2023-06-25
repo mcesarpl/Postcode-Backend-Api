@@ -1,4 +1,4 @@
-import { PostcodeController } from '@src/controllers/PostcodeController';
+import { PostcodeController } from '@src/controllers';
 import express, { Request, Response } from 'express';
 
 class PostCodeRoute {

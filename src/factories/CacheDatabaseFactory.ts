@@ -7,8 +7,7 @@ import {
 export class CacheDatabaseFactory {
   public static create<T>(model: RedisModel) {
     const { redis } = Connections.getConnections();
-    const redisClient = new RedisClient<T>(redis, model);
 
-    return redisClient;
+    return new RedisClient<T>(redis, model);
   }
 }

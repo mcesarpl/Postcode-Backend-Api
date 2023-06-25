@@ -6,19 +6,16 @@ import { tokenGenerator } from '@src/services';
 import postcodeResponseEnhancedWithAirportDistance from '@src/fixtures/postcodeResponseEnhancedWithAirportDistance.json';
 import {
   IPostcodeResponseEnhanced,
-  sessionAddresses,
+  ISessionAddresses,
 } from '@src/interfaces/IPostcodeResponse';
 import { AddressRedisModel, sessionRedisModel } from '@src/models';
 
 describe('Redis Client methods test', () => {
-  const postCodeResponseEnhanced = {
-    _id: 'N76RS',
-    ...postcodeResponseEnhancedWithAirportDistance,
-  };
+  const postCodeResponseEnhanced = postcodeResponseEnhancedWithAirportDistance;
 
   const postCodeResponseEnhancedSecond = {
-    _id: 'R59YB',
     ...postcodeResponseEnhancedWithAirportDistance,
+    _id: 'NJUHYO',
   };
 
   const session = {
@@ -49,7 +46,6 @@ describe('Redis Client methods test', () => {
       client,
       AddressRedisModel,
     );
-
     jest.spyOn(redisClient, 'deleteOne');
 
     const result = await redisClient.create(postCodeResponseEnhanced);
@@ -62,7 +58,7 @@ describe('Redis Client methods test', () => {
   });
 
   it('Should create a sessionAddresses instance and return', async () => {
-    const redisClient = new RedisClient<sessionAddresses>(
+    const redisClient = new RedisClient<ISessionAddresses>(
       client,
       sessionRedisModel,
     );
@@ -94,7 +90,7 @@ describe('Redis Client methods test', () => {
   });
 
   it('Should find one sessionAddresses instance and return it', async () => {
-    const redisClient = new RedisClient<sessionAddresses>(
+    const redisClient = new RedisClient<ISessionAddresses>(
       client,
       sessionRedisModel,
     );
@@ -114,7 +110,7 @@ describe('Redis Client methods test', () => {
       AddressRedisModel,
     );
 
-    const redisSessionClient = new RedisClient<sessionAddresses>(
+    const redisSessionClient = new RedisClient<ISessionAddresses>(
       client,
       sessionRedisModel,
     );
@@ -160,7 +156,7 @@ describe('Redis Client methods test', () => {
   });
 
   it('Should update an instance with success', async () => {
-    const redisClient = new RedisClient<sessionAddresses>(
+    const redisClient = new RedisClient<ISessionAddresses>(
       client,
       sessionRedisModel,
     );

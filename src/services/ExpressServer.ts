@@ -34,9 +34,13 @@ export class ExpressServer {
     this.app.use(initializeRoutes);
   }
 
-  async start() {
+  start() {
     this.middleware();
     this.routes();
     this.app.listen(this.port);
+  }
+
+  get() {
+    return this.app;
   }
 }

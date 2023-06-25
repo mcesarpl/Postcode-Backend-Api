@@ -1,6 +1,9 @@
 import { PostcodeResponse } from '@src/class/PostcodeResponse';
 import { HttpClientFactory } from '@src/factories/HttpClientFactory';
-import { IPostCodeServiceRawResponse } from '@src/interfaces/IPostcodeResponse';
+import {
+  IPostCodeServiceRawResponse,
+  IPostcodeResponse,
+} from '@src/interfaces/IPostcodeResponse';
 import config from 'config';
 
 export class Postcode {
@@ -9,16 +12,20 @@ export class Postcode {
     private readonly postCodeServiceUrl = config.get('App.postcodeServiceUrl'),
   ) {}
 
-  public async getSingleCode(postcode: string) {
+  public async getSingleCode(postcode: string): Promise<IPostcodeResponse> {
     if (!postcode || postcode === '') {
       throw new Error(`getSingleCode received: ${postcode}`);
     }
 
-    const result = await this.httpClient.get<IPostCodeServiceRawResponse>(
-      `${this.postCodeServiceUrl}/${postcode}`,
-    );
+    try {
+      const result = await this.httpClient.get<IPostCodeServiceRawResponse>(
+        `${this.postCodeServiceUrl}/${postcode}`,
+      );
 
-    return PostcodeResponse.reshape(result.body);
+      return PostcodeResponse.reshape(postcode, result.body);
+    } catch (error) {
+      return PostcodeResponse.generateErrorResponse(postcode);
+    }
   }
 
   public async getMultipleCodes(postcodes: string[]) {
@@ -28,12 +35,15 @@ export class Postcode {
 
     return await Promise.all(
       postcodes.map(async (postcode) => {
-        const rawAddress =
-          await this.httpClient.get<IPostCodeServiceRawResponse>(
+        try {
+          const result = await this.httpClient.get<IPostCodeServiceRawResponse>(
             `${this.postCodeServiceUrl}/${postcode}`,
           );
 
-        return PostcodeResponse.reshape(rawAddress.body);
+          return PostcodeResponse.reshape(postcode, result.body);
+        } catch (error) {
+          return PostcodeResponse.generateErrorResponse(postcode);
+        }
       }),
     );
   }

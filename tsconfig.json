@@ -31,7 +31,8 @@
   },
   "include": [
     "./src/**/*.ts",
-    "./test/**/*.ts"
+    "./test/**/*.ts",
+    "./test/globals.d.ts"
   ],
   "exclude": [
     "./node_modules/*",

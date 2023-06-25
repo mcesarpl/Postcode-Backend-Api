@@ -1,4 +1,5 @@
-export interface IPostcodeResponse {
+export interface IPostcodeResponseSuccess {
+  _id: string;
   admin_county: null;
   admin_district: string;
   admin_ward: string;
@@ -99,6 +100,15 @@ export interface IPostCodeServiceRawResponse {
   status: number;
 }
 
-export interface sessionAddresses {
-  addresses: IPostcodeResponseEnhanced[];
+export interface ISessionAddresses {
+  addresses: (IPostcodeResponseEnhanced | IPostcodeResponseError)[];
 }
+
+export interface IPostcodeResponseError {
+  _id: string;
+  message: string;
+}
+
+export type IPostcodeResponse =
+  | IPostcodeResponseSuccess
+  | IPostcodeResponseError;
